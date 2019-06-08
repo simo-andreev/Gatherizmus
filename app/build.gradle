@@ -28,6 +28,7 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-common-ktx:17.0.0'
     implementation 'com.google.firebase:firebase-core:16.0.9'
+    implementation 'com.google.firebase:firebase-ml-vision:20.0.0'
 
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.core:core-ktx:1.0.2'
