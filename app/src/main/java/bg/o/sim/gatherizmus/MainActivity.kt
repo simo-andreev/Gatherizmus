@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -65,6 +66,7 @@ class MainActivity : AppCompatActivity() {
         val result = reader.processImage(visionImage)
             .addOnSuccessListener { firebaseVisionText ->
                 toast(firebaseVisionText.text)
+                webContent.loadUrl("https://gatherer.wizards.com/Pages/Search/Default.aspx?name=+[${firebaseVisionText.text}]")
             }
             .addOnFailureListener {
                 // Task failed with an exception
