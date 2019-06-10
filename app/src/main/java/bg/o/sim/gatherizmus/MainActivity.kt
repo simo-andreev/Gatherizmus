@@ -5,11 +5,12 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity;
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-
+import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.ml.vision.FirebaseVision
+import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode != Activity.RESULT_OK){
+        if (resultCode != Activity.RESULT_OK) {
             toast("FAILED")
             TODO()
             return
@@ -56,6 +57,22 @@ class MainActivity : AppCompatActivity() {
 
 
         val bmp = data!!.extras.get("data") as Bitmap
+
+
+        val visionImage = FirebaseVisionImage.fromBitmap(bmp)
+        val reader = FirebaseVision.getInstance().onDeviceTextRecognizer
+
+        val result = reader.processImage(visionImage)
+            .addOnSuccessListener { firebaseVisionText ->
+                toast(firebaseVisionText.text)
+            }
+            .addOnFailureListener {
+                // Task failed with an exception
+                // ...
+                toast(it.localizedMessage)
+                Log.e("ERR", "Processing fail", it)
+            }
+
     }
 
 }
