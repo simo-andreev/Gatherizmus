@@ -68,4 +68,11 @@ class MainActivity : AppCompatActivity() {
                 Log.e("ERR", "Processing failed", it)
             }
     }
+
+    override fun onBackPressed() {
+        if (webContent.canGoBack())
+            webContent.goBack()
+        else
+            super.onBackPressed()
+    }
 }
