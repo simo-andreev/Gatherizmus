@@ -14,6 +14,11 @@ import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import java.lang.StringBuilder
+import android.webkit.WebView
+import android.webkit.WebViewClient
+
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,6 +37,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         webContent.loadData("Card data will appear here.", "text/plain", "utf-8")
+        webContent.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+                view.loadUrl(url)
+                return true
+            }
+        }
+        webContent.canGoBack()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -69,7 +81,12 @@ class MainActivity : AppCompatActivity() {
         val result = reader.processImage(visionImage)
             .addOnSuccessListener { firebaseVisionText ->
                 toast(firebaseVisionText.text)
-                webContent.loadUrl("https://gatherer.wizards.com/Pages/Search/Default.aspx?name=+[${firebaseVisionText.text}]")
+//                https://gatherer.wizards.com/Pages/Search/Default.aspx?name=+\[Angrath,\]+\[Minotaur\]+\[Pirate\]
+                val builder = StringBuilder()
+                firebaseVisionText.text.split(" ").forEach {
+                    builder.append("+[").append(it).append("]")
+                }
+                webContent.loadUrl("https://gatherer.wizards.com/Pages/Search/Default.aspx?name=$builder")
             }
             .addOnFailureListener {
                 // Task failed with an exception
